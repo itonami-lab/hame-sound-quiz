@@ -166,63 +166,68 @@
       background-position: center;
     }
 
-#answerScreen::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  backdrop-filter: blur(18px);
-  background: rgba(0, 0, 0, 0.45);
-  z-index: 0;
-}
+    #answerScreen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      backdrop-filter: blur(18px);
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 0;
+    }
 
-#answerScreen .answer-card {
-  position: relative;
-  z-index: 1;
-}
+    #answerScreen .answer-card {
+      position: relative;
+      z-index: 1;
+    }
 
-.image-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.92);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  padding: 20px;
-  box-sizing: border-box;
-}
+    .image-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      padding: 20px;
+      box-sizing: border-box;
+    }
 
-.image-modal img {
-  max-width: 92vw;
-  max-height: 92vh;
-  border-radius: 16px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
-}
+    .image-modal img {
+      max-width: 92vw;
+      max-height: 92vh;
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    }
 
-.image-modal.hidden {
-  display: none;
-}
+    .image-modal.hidden {
+      display: none;
+    }
 
-#actressImage,
-#workImage {
-  cursor: pointer;
-}
+    #actressImage,
+    #workImage {
+      cursor: pointer;
+    }
 
-.affiliate-link {
-  display: inline-block;
-  margin-top: 18px;
-  padding: 14px 24px;
-  background: #ff4f8b;
-  color: white;
-  text-decoration: none;
-  border-radius: 999px;
-  font-weight: bold;
-  font-size: 18px;
-}
+    .affiliate-link {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 14px 24px;
+      background: #ff4f8b;
+      color: white;
+      text-decoration: none;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 18px;
+    }
 
-.affiliate-link:hover {
-  opacity: 0.85;
-}
+    .affiliate-link:hover {
+      opacity: 0.85;
+    }
+
+    .actress-button {
+      margin-top: 14px;
+      background: #666;
+    }
   </style>
 </head>
 
@@ -259,12 +264,24 @@
       <div class="answer-card">
 
        <!-- 女優 -->
-       <div class="image-block">
-          <img id="actressImage" src="" alt="女優画像" onclick="openImageModal(this.src)">
-           <div class="image-title">
-             <span id="actressName"></span>
-           </div>
-       </div>
+        <div class="image-block">
+          <img id="actressImage"
+              src=""
+              alt="女優画像"
+              onclick="openImageModal(this.src)">
+
+          <div class="image-title">
+            <span id="actressName"></span>
+          </div>
+
+          <a id="actressBtn"
+            class="affiliate-link actress-button"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer">
+            ▶ この女優の作品を見る！
+          </a>
+        </div>
 
        <!-- 作品 -->
        <div class="image-block">
@@ -411,7 +428,8 @@
     const AF_ID = "";
 
     function makeAffiliateLink(url) {
-      return `https://al.dmm.co.jp/?lurl=${encodeURIComponent(url)}&af_id=${AF_ID}`;
+      //return `https://al.dmm.co.jp/?lurl=${encodeURIComponent(url)}&af_id=${AF_ID}`;
+        return url; /*暫定でこっち使用*/
     }
 
     let questions = [];
@@ -501,6 +519,9 @@
         `url("${q.titleImage}")`;
 
       document.getElementById("actressName").textContent = q.actress;
+      const actressAffiliate =makeAffiliateLink(q.actressUrl);
+      document.getElementById("actressBtn").href = actressAffiliate;
+
       document.getElementById("workTitle").textContent = q.title;
 
       const affiliateLink = makeAffiliateLink(q.titleUrl);
