@@ -208,6 +208,21 @@
   cursor: pointer;
 }
 
+.affiliate-link {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 14px 24px;
+  background: #ff4f8b;
+  color: white;
+  text-decoration: none;
+  border-radius: 999px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.affiliate-link:hover {
+  opacity: 0.85;
+}
   </style>
 </head>
 
@@ -246,27 +261,24 @@
        <!-- 女優 -->
        <div class="image-block">
           <img id="actressImage" src="" alt="女優画像" onclick="openImageModal(this.src)">
-          <div class="image-title">
-             <a id="actressLink"
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer">
-                <span id="actressName"></span>
-             </a>
-          </div>
+           <div class="image-title">
+             <span id="actressName"></span>
+           </div>
        </div>
 
        <!-- 作品 -->
        <div class="image-block">
          <img id="workImage" src="" alt="作品画像" onclick="openImageModal(this.src)">
-         <div class="image-title">
-            <a id="titleLink"
-               href="#"
-               target="_blank"
-               rel="noopener noreferrer">
-               <span id="workTitle"></span>
-            </a>
+          <div class="image-title">
+            <span id="workTitle"></span>
           </div>
+          <a id="affiliateBtn"
+            class="affiliate-link"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer">
+            ▶ この作品を見る！
+          </a>
        </div>
        
        <button id="answerPlayBtn" onclick="toggleAudio()">▶ 再生</button>
@@ -396,6 +408,12 @@
       }
     ];
 
+    const AF_ID = "";
+
+    function makeAffiliateLink(url) {
+      return `https://al.dmm.co.jp/?lurl=${encodeURIComponent(url)}&af_id=${AF_ID}`;
+    }
+
     let questions = [];
     let currentIndex = 0;
 
@@ -483,10 +501,10 @@
         `url("${q.titleImage}")`;
 
       document.getElementById("actressName").textContent = q.actress;
-      document.getElementById("actressLink").href = q.actressUrl;
-
       document.getElementById("workTitle").textContent = q.title;
-      document.getElementById("titleLink").href = q.titleUrl;
+
+      const affiliateLink = makeAffiliateLink(q.titleUrl);
+      document.getElementById("affiliateBtn").href = affiliateLink;
 
       if (currentIndex === questions.length - 1) {
         document.getElementById("nextBtn").classList.add("hidden");
@@ -572,13 +590,13 @@
     }
 
     function openImageModal(src) {
-  document.getElementById("modalImage").src = src;
-  document.getElementById("imageModal").classList.remove("hidden");
-}
+      document.getElementById("modalImage").src = src;
+      document.getElementById("imageModal").classList.remove("hidden");
+    }
 
-function closeImageModal() {
-  document.getElementById("imageModal").classList.add("hidden");
-}
+    function closeImageModal() {
+      document.getElementById("imageModal").classList.add("hidden");
+    }
     
   </script>
 
