@@ -228,6 +228,90 @@
       margin-top: 14px;
       background: #666;
     }
+
+    #hintBox {
+      margin-top: 20px;
+      padding: 18px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 16px;
+      font-size: 20px;
+      line-height: 1.8;
+    }
+
+    .hint-name {
+      display: block;
+      font-weight: bold;
+    }
+
+    .hint-list {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hint-card {
+      width: 110px;
+    }
+
+    .hint-card img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 14px;
+    }
+
+    .hint-card div {
+      margin-top: 8px;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .form-wrapper {
+      width: 100%;
+      max-width: 700px;
+      margin-top: 30px;
+      border-radius: 20px;
+      overflow: hidden;
+      background: white;
+    }
+
+    .feedback-message {
+      margin-top: auto;
+      padding-top: 60px;
+      padding-bottom: 24px;
+
+      font-size: 14px;
+      line-height: 1.9;
+
+      color: rgba(255,255,255,0.62);
+      text-align: center;
+    }
+
+    .feedback-inline-link {
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+
+      transition: 0.25s;
+    }
+
+    .feedback-inline-link:hover {
+      color: #ffd36a;
+      text-decoration: underline;
+    }
+
+    #endScreen {
+      justify-content: space-between;
+    }
+
+    .end-main {
+      flex: 1;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
   </style>
 </head>
 
@@ -252,7 +336,10 @@
     <h2 id="progress">1問目</h2>
 
     <button id="questionPlayBtn" onclick="toggleAudio()">▶ 再生</button>
+    <button onclick="showHint()">ヒント</button>
     <button onclick="showAnswer()">解答を見る</button>
+
+    <div id="hintBox" class="hidden"></div>
 
     <audio id="audioPlayer"></audio>
   </section>
@@ -305,10 +392,30 @@
     </section>
 
   <!-- ④ 終了画面 -->
-  <section id="endScreen" class="screen hidden">
-    <p class="ending-message">今夜はここまで。</p>
-    <button onclick="restartGame()">もう一度聞く！</button>
-  </section>
+    <section id="endScreen" class="screen hidden">
+
+      <div class="end-main">
+
+        <p class="ending-message">今夜はここまで。</p>
+
+        <button onclick="restartGame()">もう一度聞く！</button>
+
+      </div>
+
+      <p class="feedback-message">
+        プレイヤーの意見で、このクイズは進化していきます。<br>
+
+        <a
+          href="https://forms.gle/KkU8ePpZWbD3Suht9"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="feedback-inline-link"
+        >
+          ご意見・ご感想をこちらからお聞かせください。
+        </a>
+      </p>
+
+    </section>
 
 
   <script>
@@ -458,11 +565,14 @@
       const q = questions[currentIndex];
       
       stopAudio();
-      
+
       document.getElementById("progress").textContent =
       `${currentIndex + 1}問目`;
       
       audioPlayer.src = q.audio;
+
+      document.getElementById("hintBox").classList.add("hidden");
+      document.getElementById("hintBox").innerHTML = "";
       
       showScreen("questionScreen");
     }
@@ -619,6 +729,37 @@
 
     function closeImageModal() {
       document.getElementById("imageModal").classList.add("hidden");
+    }
+
+    function showHint() {
+      const q = questions[currentIndex];
+
+      const wrongActresses = data
+        .filter(item => item.actress !== q.actress);
+
+      const selectedWrong = shuffleArray([...wrongActresses]).slice(0, 2);
+
+      const hintItems = shuffleArray([
+        q,
+        ...selectedWrong
+      ]);
+
+      const hintBox = document.getElementById("hintBox");
+
+      hintBox.innerHTML = `
+        <p>この中の誰かです</p>
+
+        <div class="hint-list">
+          ${hintItems.map(item => `
+            <div class="hint-card">
+              <img src="${item.actressImage}" alt="${item.actress}">
+              <div>${item.actress}</div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+
+      hintBox.classList.remove("hidden");
     }
     
   </script>
